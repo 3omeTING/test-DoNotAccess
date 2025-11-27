@@ -1,0 +1,14 @@
+$Winlogon = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+
+$SecurePassword = Read-Host "Enter the LOCAL Administrator password" -AsSecureString
+$Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
+    [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword)
+)
+
+Set-ItemProperty $Winlogon "AutoAdminLogon" -Value "1" -Type String
+Set-ItemProperty $Winlogon "DefaultUsername" -Value "Administrator" -Type String
+Set-ItemProperty $Winlogon "DefaultDomainName" -Value $env:COMPUTERNAME -Type String
+Set-ItemProperty $Winlogon "DefaultPassword" -Value $Password -Type String
+
+Write-Host "`nAuto-login for LOCAL Administrator has been enabled." -ForegroundColor Green
+Write-Host "Reboot the server to apply changes." -ForegroundColor Yellow
