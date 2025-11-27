@@ -7,13 +7,11 @@ Get-MpComputerStatus | Select-Object AntivirusEnabled, RealTimeProtectionEnabled
 
 $Winlogon = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
-# Ask for local Administrator password
 $SecurePassword = Read-Host "Enter the LOCAL Administrator password" -AsSecureString
 $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
     [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword)
 )
 
-# Set registry values for autologon
 Set-ItemProperty $Winlogon "AutoAdminLogon" -Value "1" -Type String
 Set-ItemProperty $Winlogon "DefaultUsername" -Value "Administrator" -Type String
 Set-ItemProperty $Winlogon "DefaultDomainName" -Value $env:COMPUTERNAME -Type String
@@ -21,3 +19,4 @@ Set-ItemProperty $Winlogon "DefaultPassword" -Value $Password -Type String
 
 Write-Host "`nAuto-login for LOCAL Administrator has been enabled." -ForegroundColor Green
 Write-Host "Reboot the server to apply changes." -ForegroundColor Yellow
+
